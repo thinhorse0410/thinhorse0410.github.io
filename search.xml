@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title><![CDATA[Mac办公]]></title>
+    <url>%2F2018%2F08%2F05%2FMac%E5%8A%9E%E5%85%AC%2F</url>
+    <content type="text"><![CDATA[iTerm配置配置iTerm颜色. Oh-My-Zsh替换默认的bash.]]></content>
+      <categories>
+        <category>编程</category>
+      </categories>
+      <tags>
+        <tag>linux</tag>
+        <tag>expect</tag>
+        <tag>iterm</tag>
+        <tag>shell</tag>
+        <tag>zsh</tag>
+      </tags>
+  </entry>
+</search>
