@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title><![CDATA[Mac办公]]></title>
-    <url>%2F2018%2F08%2F05%2FMac%E5%8A%9E%E5%85%AC%2F</url>
-    <content type="text"><![CDATA[iTerm配置配置iTerm颜色. Oh-My-Zsh替换默认的bash.]]></content>
+    <title><![CDATA[关于mac的一些整理]]></title>
+    <url>%2F2018%2F08%2F05%2Fthings-to-do-on-mac%2F</url>
+    <content type="text"><![CDATA[更换terminal 配置iTerm颜色. 使用expect配置ssh登录密码 更换bash 使用Oh-My-Zsh]]></content>
       <categories>
         <category>编程</category>
       </categories>
