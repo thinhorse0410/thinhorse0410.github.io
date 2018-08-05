@@ -4,8 +4,8 @@
 
 # Site
 title: thinhorse的碎碎念
-subtitle:
-description:
+subtitle: show me your code.
+description: 不期而遇 | 不言而喻 | 不药而愈
 keywords:
 author: thinhorse
 language: zh-Hans
@@ -58,7 +58,12 @@ index_generator:
 # Category & Tag
 default_category: uncategorized
 category_map:
+  编程: programming
+  生活: life
+  其他: other
 tag_map:
+  中国: China
+  长沙: changsha
 
 # Date / Time format
 ## Hexo uses Moment.js to parse and display date
@@ -73,6 +78,13 @@ per_page: 30
 pagination_dir: page
 
 # Extensions
+search:
+  path: search.xml
+  field: post
+  format: html
+  limit: 10000
+
+
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
 theme: next
