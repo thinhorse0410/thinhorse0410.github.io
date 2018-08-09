@@ -296,6 +296,178 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/09/how-to-build-lucene-branch-3x-source-code-IDEA-env-md/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="thinhorse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/blog_head.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="thinhorse的碎碎念">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/08/09/how-to-build-lucene-branch-3x-source-code-IDEA-env-md/" itemprop="url">如何在IDEA里搭建lucene 3.x源码MAVEN环境</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-09T22:07:36+08:00">
+                2018-08-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/programming/" itemprop="url" rel="index">
+                    <span itemprop="name">编程</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h4 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h4><h5 id="lucene-7-0都出来了为啥还研究3-x的代码"><a href="#lucene-7-0都出来了为啥还研究3-x的代码" class="headerlink" title="lucene 7.0都出来了为啥还研究3.x的代码?"></a>lucene 7.0都出来了为啥还研究3.x的代码?</h5><ul>
+<li>核心的东西变化不大,熟悉了一个版本,再来看最新的版本问题不大.</li>
+<li>3.x的教材比较多,如: 刘超觉先,JavenStudio等写的文章都很好,便于搭配源码一起看.</li>
+</ul>
+<h4 id="克隆lucene3-x的代码"><a href="#克隆lucene3-x的代码" class="headerlink" title="克隆lucene3.x的代码"></a>克隆lucene3.x的代码</h4><ul>
+<li>clone整个代码<ul>
+<li>git clone <a href="https://github.com/apache/lucene-solr.git" target="_blank" rel="noopener">https://github.com/apache/lucene-solr.git</a></li>
+<li>cd /xxx/lucene-solr/</li>
+<li>创建分支branch_3x 基于remotes/origin/branch_3x</li>
+</ul>
+</li>
+<li>直接clone指定分支<ul>
+<li>git clone -b branch_3x <a href="https://github.com/apache/lucene-solr.git" target="_blank" rel="noopener">https://github.com/apache/lucene-solr.git</a></li>
+</ul>
+</li>
+</ul>
+<h4 id="生成IDEA项目"><a href="#生成IDEA项目" class="headerlink" title="生成IDEA项目"></a>生成IDEA项目</h4><ul>
+<li>cd /xxx/branch_3x/lucene-solr/</li>
+<li>ant idea</li>
+</ul>
+<h4 id="生成pom-xml文件"><a href="#生成pom-xml文件" class="headerlink" title="生成pom.xml文件"></a>生成pom.xml文件</h4><ul>
+<li>cd /xxx/branch_3x/lucene-solr/</li>
+<li>ant get-maven-poms(如果先切换到branch_3x分支后再运行,直接下载了个pom.xml文件.跟直接在master分支上运行不一样.)</li>
+</ul>
+<h4 id="直接下载生成好的项目"><a href="#直接下载生成好的项目" class="headerlink" title="直接下载生成好的项目"></a>直接下载生成好的项目</h4><ul>
+<li><a href="https://github.com/thinhorse0410/lucene_branch_3x" target="_blank" rel="noopener">https://github.com/thinhorse0410/lucene_branch_3x</a></li>
+</ul>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/08/09/how-to-build-lucene-branch-3x-source-code-IDEA-env-md/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/05/things-to-do-on-mac/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -485,7 +657,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-count">2</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -507,7 +679,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-count">10</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

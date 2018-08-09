@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="full-text search,lucene,maven,IDEA,source code," />
 
 
 
@@ -79,16 +79,18 @@
 
 
 
-<meta name="description" content="不期而遇 | 不言而喻 | 不药而愈">
-<meta property="og:type" content="website">
-<meta property="og:title" content="thinhorse的碎碎念">
-<meta property="og:url" content="http://yoursite.com/tags/iterm/index.html">
+<meta name="description" content="说明lucene 7.0都出来了为啥还研究3.x的代码? 核心的东西变化不大,熟悉了一个版本,再来看最新的版本问题不大. 3.x的教材比较多,如: 刘超觉先,JavenStudio等写的文章都很好,便于搭配源码一起看.  克隆lucene3.x的代码 clone整个代码 git clone https://github.com/apache/lucene-solr.git cd /xxx/luce">
+<meta name="keywords" content="full-text search,lucene,maven,IDEA,source code">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何在IDEA里搭建lucene 3.x源码MAVEN环境">
+<meta property="og:url" content="http://yoursite.com/2018/08/09/how-to-build-lucene-branch-3x-source-code-IDEA-env-md/index.html">
 <meta property="og:site_name" content="thinhorse的碎碎念">
-<meta property="og:description" content="不期而遇 | 不言而喻 | 不药而愈">
+<meta property="og:description" content="说明lucene 7.0都出来了为啥还研究3.x的代码? 核心的东西变化不大,熟悉了一个版本,再来看最新的版本问题不大. 3.x的教材比较多,如: 刘超觉先,JavenStudio等写的文章都很好,便于搭配源码一起看.  克隆lucene3.x的代码 clone整个代码 git clone https://github.com/apache/lucene-solr.git cd /xxx/luce">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-08-09T14:18:22.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="thinhorse的碎碎念">
-<meta name="twitter:description" content="不期而遇 | 不言而喻 | 不药而愈">
+<meta name="twitter:title" content="如何在IDEA里搭建lucene 3.x源码MAVEN环境">
+<meta name="twitter:description" content="说明lucene 7.0都出来了为啥还研究3.x的代码? 核心的东西变化不大,熟悉了一个版本,再来看最新的版本问题不大. 3.x的教材比较多,如: 刘超觉先,JavenStudio等写的文章都很好,便于搭配源码一起看.  克隆lucene3.x的代码 clone整个代码 git clone https://github.com/apache/lucene-solr.git cd /xxx/luce">
 
 
 
@@ -118,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/tags/iterm/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/08/09/how-to-build-lucene-branch-3x-source-code-IDEA-env-md/"/>
 
 
 
 
 
-  <title>标签: iterm | thinhorse的碎碎念</title>
+  <title>如何在IDEA里搭建lucene 3.x源码MAVEN环境 | thinhorse的碎碎念</title>
   
 
 
@@ -143,7 +145,7 @@
     
   
 
-  <div class="container sidebar-position-left ">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
     <a href="https://github.com/thinhorse0410"><img style="position: absolute; top: 0; right: 0; border: 0;" src="/images/forkme_right_darkblue_121621.png" alt="关注我GitHub"></a>
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -281,54 +283,204 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block tag">
+  <div id="posts" class="posts-expand">
+    
 
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1>iterm<small>标签</small>
-        </h1>
-      </div>
+  
 
-      
-        
+  
+  
+  
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/09/how-to-build-lucene-branch-3x-source-code-IDEA-env-md/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="thinhorse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/blog_head.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="thinhorse的碎碎念">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2018/08/05/things-to-do-on-mac/" itemprop="url">
-              
-                <span itemprop="name">关于mac的一些整理</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">如何在IDEA里搭建lucene 3.x源码MAVEN环境</h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-08-05T13:51:19+08:00"
-              content="2018-08-05" >
-          08-05
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-09T22:07:36+08:00">
+                2018-08-09
+              </time>
+            
 
-    </header>
-  </article>
+            
 
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/programming/" itemprop="url" rel="index">
+                    <span itemprop="name">编程</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h4 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h4><h5 id="lucene-7-0都出来了为啥还研究3-x的代码"><a href="#lucene-7-0都出来了为啥还研究3-x的代码" class="headerlink" title="lucene 7.0都出来了为啥还研究3.x的代码?"></a>lucene 7.0都出来了为啥还研究3.x的代码?</h5><ul>
+<li>核心的东西变化不大,熟悉了一个版本,再来看最新的版本问题不大.</li>
+<li>3.x的教材比较多,如: 刘超觉先,JavenStudio等写的文章都很好,便于搭配源码一起看.</li>
+</ul>
+<h4 id="克隆lucene3-x的代码"><a href="#克隆lucene3-x的代码" class="headerlink" title="克隆lucene3.x的代码"></a>克隆lucene3.x的代码</h4><ul>
+<li>clone整个代码<ul>
+<li>git clone <a href="https://github.com/apache/lucene-solr.git" target="_blank" rel="noopener">https://github.com/apache/lucene-solr.git</a></li>
+<li>cd /xxx/lucene-solr/</li>
+<li>创建分支branch_3x 基于remotes/origin/branch_3x</li>
+</ul>
+</li>
+<li>直接clone指定分支<ul>
+<li>git clone -b branch_3x <a href="https://github.com/apache/lucene-solr.git" target="_blank" rel="noopener">https://github.com/apache/lucene-solr.git</a></li>
+</ul>
+</li>
+</ul>
+<h4 id="生成IDEA项目"><a href="#生成IDEA项目" class="headerlink" title="生成IDEA项目"></a>生成IDEA项目</h4><ul>
+<li>cd /xxx/branch_3x/lucene-solr/</li>
+<li>ant idea</li>
+</ul>
+<h4 id="生成pom-xml文件"><a href="#生成pom-xml文件" class="headerlink" title="生成pom.xml文件"></a>生成pom.xml文件</h4><ul>
+<li>cd /xxx/branch_3x/lucene-solr/</li>
+<li>ant get-maven-poms(如果先切换到branch_3x分支后再运行,直接下载了个pom.xml文件.跟直接在master分支上运行不一样.)</li>
+</ul>
+<h4 id="直接下载生成好的项目"><a href="#直接下载生成好的项目" class="headerlink" title="直接下载生成好的项目"></a>直接下载生成好的项目</h4><ul>
+<li><a href="https://github.com/thinhorse0410/lucene_branch_3x" target="_blank" rel="noopener">https://github.com/thinhorse0410/lucene_branch_3x</a></li>
+</ul>
+<a id="more"></a>
 
       
     </div>
+    
+    
+    
 
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/full-text-search/" rel="tag"># full-text search</a>
+          
+            <a href="/tags/lucene/" rel="tag"># lucene</a>
+          
+            <a href="/tags/maven/" rel="tag"># maven</a>
+          
+            <a href="/tags/IDEA/" rel="tag"># IDEA</a>
+          
+            <a href="/tags/source-code/" rel="tag"># source code</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/05/things-to-do-on-mac/" rel="next" title="关于mac的一些整理">
+                <i class="fa fa-chevron-left"></i> 关于mac的一些整理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -336,6 +488,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -356,8 +512,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -437,6 +602,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#说明"><span class="nav-number">1.</span> <span class="nav-text">说明</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#lucene-7-0都出来了为啥还研究3-x的代码"><span class="nav-number">1.1.</span> <span class="nav-text">lucene 7.0都出来了为啥还研究3.x的代码?</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#克隆lucene3-x的代码"><span class="nav-number">2.</span> <span class="nav-text">克隆lucene3.x的代码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#生成IDEA项目"><span class="nav-number">3.</span> <span class="nav-text">生成IDEA项目</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#生成pom-xml文件"><span class="nav-number">4.</span> <span class="nav-text">生成pom.xml文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#直接下载生成好的项目"><span class="nav-number">5.</span> <span class="nav-text">直接下载生成好的项目</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -577,6 +758,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
