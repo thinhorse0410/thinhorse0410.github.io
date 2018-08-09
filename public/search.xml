@@ -1,6 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[Linux上远程拷贝常用命令]]></title>
+    <url>%2F2018%2F08%2F09%2Fcopy-files-remotely-on-linux-md%2F</url>
+    <content type="text"><![CDATA[rz/sz 适用小文件 系统自带 scp 设置互信,应答(yes/no),输入密码 系统自带 rsync 备份 nc 大文件 要在接收端启动监听 expect linux上需要安装,mac上自带 适合处理需要交互的批量自动化任务]]></content>
+      <categories>
+        <category>编程</category>
+      </categories>
+      <tags>
+        <tag>rz-sz</tag>
+        <tag>scp</tag>
+        <tag>rsync</tag>
+        <tag>nc</tag>
+        <tag>ssh+scp+expect</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[常见ansible的有用例子]]></title>
+    <url>%2F2018%2F08%2F09%2Fsome-useful-ansible-scripts-md%2F</url>
+    <content type="text"><![CDATA[ansible里调用http服务,并根据返回决策12345678910111213141516171819202122232425262728293031---- hosts: "&#123;&#123; group &#125;&#125;" remote_user: user serial: 1 tasks: - name: invoke http service command: curl http://"&#123;&#123; ansible_ssh_host &#125;&#125;":"&#123;&#123; remotePort &#125;&#125;"/api register: response until: ("2000" in response.stdout) or ("404" in response.stdout) retries: 3 delay: 5 ignore_errors: no - name: wait 60s local_action: module: wait_for timeout: 60 - name: copy file to remote server copy: src=../xxx/a dest=/xxx/ - name: restart command: supervisorctl -c /xxx/supervisord.conf restart serviceA - name: wait 30s for server start local_action: module: wait_for timeout: 30 - name: check service start command: curl http://"&#123;&#123; ansible_ssh_host &#125;&#125;":"&#123;&#123; remotePort &#125;&#125;"/health register: resp until: ("UP" in resp.stdout) or ("404" in resp.stdout) retries: 3 delay: 5 ignore_errors: no]]></content>
+      <categories>
+        <category>编程</category>
+      </categories>
+      <tags>
+        <tag>ansible-playbook</tag>
+        <tag>yml</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[一些工作中有用的expect脚本]]></title>
+    <url>%2F2018%2F08%2F09%2Fsome-useful-expect-scripts-md%2F</url>
+    <content type="text"><![CDATA[expect的作用 自动化的完成一些需要交互的任务 ssh,scp时,需要回答yes,需要输入密码验证(未设置互信的前提下) 此时我们可以使用一些如JcSH(用Java实现的ssh库)工具库. 若只用脚本如何实现? 这就需要expect这个工具了. 实用例子ssh登录机器并执行shell命令demo.exp1234567891011121314151617181920#!/usr/bin/expectset timeout 300set username [lindex $argv 0]set host [lindex $argv 1]set password [lindex $argv 2]set target [lindex $argv 3]spawn ssh $username@$host "mkdir -p /tmp/kafka-log-gather/$target" expect &#123; "(yes/no)?" &#123; send "yes\n" expect "*assword:" &#123; send "$password\n"&#125; &#125; "*assword:" &#123; send "$password\n" &#125; &#125;expect "100%"exit 0 运行expect demo.exp username host password target]]></content>
+      <tags>
+        <tag>linux</tag>
+        <tag>expect</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[如何在IDEA里搭建lucene 3.x源码MAVEN环境]]></title>
     <url>%2F2018%2F08%2F09%2Fhow-to-build-lucene-branch-3x-source-code-IDEA-env-md%2F</url>
     <content type="text"><![CDATA[说明lucene 7.0都出来了为啥还研究3.x的代码? 核心的东西变化不大,熟悉了一个版本,再来看最新的版本问题不大. 3.x的教材比较多,如: 刘超觉先,JavenStudio等写的文章都很好,便于搭配源码一起看. 克隆lucene3.x的代码 clone整个代码 git clone https://github.com/apache/lucene-solr.git cd /xxx/lucene-solr/ 创建分支branch_3x 基于remotes/origin/branch_3x 直接clone指定分支 git clone -b branch_3x https://github.com/apache/lucene-solr.git 生成IDEA项目 cd /xxx/branch_3x/lucene-solr/ ant idea 生成pom.xml文件 cd /xxx/branch_3x/lucene-solr/ ant get-maven-poms(如果先切换到branch_3x分支后再运行,直接下载了个pom.xml文件.跟直接在master分支上运行不一样.) 直接下载生成好的项目 https://github.com/thinhorse0410/lucene_branch_3x]]></content>
