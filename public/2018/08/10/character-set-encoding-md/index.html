@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="ASCII,Unicode,UTF-8,UTF-16,UTF-32," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="本文参考了很多优秀的文章,终于理清了JAVA中的字符集和编码问题,为后续的lucene分析奠定基础.  什么是字符集和字符编码 字符集:  字符的集合,常见的有ASCII,Unicode字符集   字符编码:  codepoint码点是字符的数字形式,而计算机中都是二进制,对于一个二进制串如何判断是ASCII字符还是Unicode字符? 显然直接用这种码点的二进制存储和传输是不行的,便有各种编码">
+<meta name="keywords" content="ASCII,Unicode,UTF-8,UTF-16,UTF-32">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JAVA中的字符集和字符编码">
+<meta property="og:url" content="http://yoursite.com/2018/08/10/character-set-encoding-md/index.html">
+<meta property="og:site_name" content="thinhorse的碎碎念">
+<meta property="og:description" content="本文参考了很多优秀的文章,终于理清了JAVA中的字符集和编码问题,为后续的lucene分析奠定基础.  什么是字符集和字符编码 字符集:  字符的集合,常见的有ASCII,Unicode字符集   字符编码:  codepoint码点是字符的数字形式,而计算机中都是二进制,对于一个二进制串如何判断是ASCII字符还是Unicode字符? 显然直接用这种码点的二进制存储和传输是不行的,便有各种编码">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-08-11T14:55:39.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JAVA中的字符集和字符编码">
+<meta name="twitter:description" content="本文参考了很多优秀的文章,终于理清了JAVA中的字符集和编码问题,为后续的lucene分析奠定基础.  什么是字符集和字符编码 字符集:  字符的集合,常见的有ASCII,Unicode字符集   字符编码:  codepoint码点是字符的数字形式,而计算机中都是二进制,对于一个二进制串如何判断是ASCII字符还是Unicode字符? 显然直接用这种码点的二进制存储和传输是不行的,便有各种编码">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/08/10/character-set-encoding-md/"/>
+
+
+
+
+
+  <title>JAVA中的字符集和字符编码 | thinhorse的碎碎念</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+    <a href="https://github.com/thinhorse0410"><img style="position: absolute; top: 0; right: 0; border: 0;" src="/images/forkme_right_darkblue_121621.png" alt="关注我GitHub"></a>
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">thinhorse的碎碎念</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">show me your code.</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/10/character-set-encoding-md/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="thinhorse">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/blog_head.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="thinhorse的碎碎念">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">JAVA中的字符集和字符编码</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-10T23:19:41+08:00">
+                2018-08-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/programming/" itemprop="url" rel="index">
+                    <span itemprop="name">编程</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>本文参考了很多优秀的文章,终于理清了JAVA中的字符集和编码问题,为后续的lucene分析奠定基础.</p>
+</blockquote>
+<h4 id="什么是字符集和字符编码"><a href="#什么是字符集和字符编码" class="headerlink" title="什么是字符集和字符编码"></a>什么是字符集和字符编码</h4><ul>
+<li>字符集: <ul>
+<li>字符的集合,常见的有ASCII,Unicode字符集</li>
+</ul>
+</li>
+<li>字符编码: <ul>
+<li>codepoint码点是字符的数字形式,而计算机中都是二进制,对于一个二进制串如何判断是ASCII字符还是Unicode字符?</li>
+<li>显然直接用这种码点的二进制存储和传输是不行的,便有各种编码方式,常见流行的有UTF-8这种编码</li>
+<li><strong><em>实际存储,传输的数据</em></strong>是对码点的二进制进行转换/编码后的数据(也就是按编码方案)</li>
+</ul>
+</li>
+</ul>
+<h4 id="ASCII字符集及编码"><a href="#ASCII字符集及编码" class="headerlink" title="ASCII字符集及编码"></a>ASCII字符集及编码</h4><ul>
+<li>我们知道，计算机内部，所有信息最终都是一个二进制值。每一个二进制位（bit）有0和1两种状态，因此八个二进制位就可以组合出256种状态，这被称为一个字节（byte）。也就是说，一个字节一共可以用来表示256种不同的状态，每一个状态对应一个符号，就是256个符号，从00000000到11111111。上个世纪60年代，美国制定了一套字符编码，对英语字符与二进制位之间的关系，做了统一规定。这被称为 ASCII 码，一直沿用至今。</li>
+<li>ASCII 码一共规定了128个字符的编码，比如空格SPACE是32（二进制00100000），大写的字母A是65（二进制01000001）。这128个符号（包括32个不能打印出来的控制符号），只占用了一个字节的后面7位，最前面的一位统一规定为0。</li>
+</ul>
+<h4 id="Unicode字符集"><a href="#Unicode字符集" class="headerlink" title="Unicode字符集"></a>Unicode字符集</h4><ul>
+<li>Unicode 当然是一个很大的集合，现在的规模可以容纳100多万个符号。每个符号的编码都不一样，比如，U+0639表示阿拉伯字母Ain，U+0041表示英语的大写字母A，U+4E25表示汉字严。具体的符号对应表，可以查询unicode.org，或者专门的汉字对应表。</li>
+<li>Unicode的编码空间从U+0000到U+10FFFF,共有1112064个码位(code point)可用来映射字符,码位就是字符的数字形式</li>
+<li>这部分编码空间可以划分为17个平面(plane),每个平面包含2^16(65536)个码位</li>
+<li>第一个平面称为基本多语言平面(Basic Multilingual Plane,BMP),或称第零平面(Plane 0)</li>
+<li>其他平面称为辅助平面(Supplementary Planes)</li>
+<li>基本多语言平面内,从U+D800到U+DFFF之间的码位区块是永久保留不映射到Unicode字符</li>
+<li>UTF-16就利用保留下来的0xD800-0xDFFF区段的码位来对辅助平面的字符的码位进行编码</li>
+<li>最常用的字符都包含在BMP中,用2个字节表示</li>
+</ul>
+<h4 id="Unicode字符集编码方式"><a href="#Unicode字符集编码方式" class="headerlink" title="Unicode字符集编码方式"></a>Unicode字符集编码方式</h4><ul>
+<li>Unicode具有多种编码方案</li>
+<li>Unicode字符集规定的标准编码方案是UCS-2(UTF-16)用两个字节表示一个Unicode字符</li>
+<li>UCS-4(UTF-32)用4个字节表示一个Unicode字符</li>
+<li>另外一个常用的Unicode编码方案–UTF-8用1到4个变长字节来表示一个Unicode字符,并可以从一个简单的转换算法从UTF-16直接得到</li>
+<li>UTF-16不兼容ASCII编码导致不流行,而UTF-8兼容ASCII编码</li>
+</ul>
+<h4 id="UTF-8"><a href="#UTF-8" class="headerlink" title="UTF-8"></a>UTF-8</h4><ul>
+<li>JVM规范中明确说明了java的char类型使用的编码方案是UTF-16</li>
+<li>UTF-8 最大的一个特点，就是它是一种变长的编码方式。它可以使用1~4个字节表示一个符号，根据不同的符号而变化字节长度。</li>
+<li>UTF-8 的编码规则很简单，只有二条：<ul>
+<li>对于单字节的符号，字节的第一位设为0，后面7位为这个符号的 Unicode 码。因此对于英语字母，UTF-8 编码和 ASCII 码是相同的。</li>
+<li>对于n字节的符号（n &gt; 1），第一个字节的前n位都设为1，第n + 1位设为0，后面字节的前两位一律设为10。剩下的没有提及的二进制位，全部为这个符号的 Unicode 码。</li>
+<li>下表总结了编码规则，字母x表示可用编码的位。<br>Unicode符号范围     |               UTF-8编码方式<br>(十六进制)          |              （二进制）<br>———————-+———————————————<br>0000 0000-0000 007F | 0xxxxxxx<br>0000 0080-0000 07FF | 110xxxxx 10xxxxxx<br>0000 0800-0000 FFFF | 1110xxxx 10xxxxxx 10xxxxxx<br>0001 0000-0010 FFFF | 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx</li>
+<li>跟据上表，解读 UTF-8 编码非常简单。如果一个字节的第一位是0，则这个字节单独就是一个字符；如果第一位是1，则连续有多少个1，就表示当前字符占用多少个字节。</li>
+<li>下面，还是以汉字严为例，演示如何实现 UTF-8 编码。</li>
+<li>严的 Unicode 是4E25（100111000100101），根据上表，可以发现4E25处在第三行的范围内（0000 0800 - 0000 FFFF），因此严的 UTF-8 编码需要三个字节，即格式是1110xxxx 10xxxxxx 10xxxxxx。然后，从严的最后一个二进制位开始，依次从后向前填入格式中的x，多出的位补0。这样就得到了，</li>
+<li>严的 UTF-8 编码是11100100 10111000 10100101，转换成十六进制就是E4B8A5。</li>
+</ul>
+</li>
+</ul>
+<h4 id="传输-存储的顺序是否和编码顺序一致-大小端"><a href="#传输-存储的顺序是否和编码顺序一致-大小端" class="headerlink" title="传输,存储的顺序是否和编码顺序一致(大小端)"></a>传输,存储的顺序是否和编码顺序一致(大小端)</h4><ul>
+<li>UCS-2 格式可以存储 Unicode 码（码点不超过0xFFFF）<ul>
+<li>以汉字严为例，Unicode 码是4E25，需要用两个字节存储，一个字节是4E，另一个字节是25</li>
+<li>存储的时候，4E在前，25在后，这就是 Big endian 方式；25在前，4E在后，这是 Little endian 方式</li>
+</ul>
+</li>
+<li>第一个字节在前，就是”大头方式”（Big endian），第二个字节在前就是”小头方式”（Little endian）。</li>
+<li>那么很自然的，就会出现一个问题：计算机怎么知道某一个文件到底采用哪一种方式编码？</li>
+<li>Unicode 规范定义<ul>
+<li>每一个文件的最前面分别加入一个表示编码顺序的字符,这个字符的名字叫做”零宽度非换行空格”,用FEFF表示,这正好是两个字节,而且FF比FE大1</li>
+<li>如果一个文本文件的头两个字节是FE FF,就表示该文件采用大头方式</li>
+<li>如果头两个字节是FF FE,就表示该文件采用小头方式</li>
+</ul>
+</li>
+</ul>
+<h4 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h4><ul>
+<li>打开”记事本”程序notepad.exe，新建一个文本文件，内容就是一个严字，依次采用ANSI，Unicode，Unicode big endian和UTF-8编码方式保存。</li>
+<li>然后，用文本编辑软件UltraEdit 中的”十六进制功能”，观察该文件的内部编码方式。<br>  1）ANSI：文件的编码就是两个字节D1 CF，这正是严的 GB2312 编码，这也暗示 GB2312 是采用大头方式存储的。<br>  2）Unicode：编码是四个字节FF FE 25 4E，其中FF FE表明是小头方式存储，真正的编码是4E25。<br>  3）Unicode big endian：编码是四个字节FE FF 4E 25，其中FE FF表明是大头方式存储。<br>  4）UTF-8：编码是六个字节EF BB BF E4 B8 A5，前三个字节EF BB BF表示这是UTF-8编码，后三个E4B8A5就是严的具体编码，它的存储顺序与编码顺序是一致的。</li>
+</ul>
+<h4 id="UTF-16"><a href="#UTF-16" class="headerlink" title="UTF-16"></a>UTF-16</h4><ul>
+<li>JVM规范中明确说明了java的char类型使用的编码方案是UTF-16，所以先来了解下UTF-16。</li>
+<li>基本多语言平面内，从U+D800到U+DFFF之间的码位区块是永久保留不映射到Unicode字符。UTF-16就利用保留下来的0xD800-0xDFFF区段的码位来对辅助平面的字符的码位进行编码。</li>
+<li>最常用的字符都包含在BMP中，用2个字节表示。辅助平面中的码位，在UTF-16中被编码为一对16比特长的码元，称作代理对（surrogate pair），具体方法是：<ul>
+<li>将码位减去0x10000,得到的值的范围为20比特长的0~0xFFFFF。</li>
+<li>高位的10比特的值（值的范围为0~0x3FF）被加上0xD800得到第一个码元或称作高位代理（high surrogate），值的范围是0xD800~0xDBFF.由于高位代理比低位代理的值要小，所以为了避免混淆使用，Unicode标准现在称高位代理为前导代理（lead surrogates）。</li>
+<li>低位的10比特的值（值的范围也是0~0x3FF）被加上0xDC00得到第二个码元或称作低位代理（low surrogate），现在值的范围是0xDC00~0xDFFF.由于低位代理比高位代理的值要大，所以为了避免混淆使用，Unicode标准现在称低位代理为后尾代理（trail surrogates）。</li>
+</ul>
+</li>
+<li>例如U+10437编码:<ul>
+<li>0x10437减去0x10000,结果为0x00437,二进制为0000 0000 0100 0011 0111。</li>
+<li>分区它的上10位值和下10位值（使用二进制）:0000000001 and 0000110111。</li>
+<li>添加0xD800到上值，以形成高位：0xD800 + 0x0001 = 0xD801。</li>
+<li>添加0xDC00到下值，以形成低位：0xDC00 + 0x0037 = 0xDC37。</li>
+</ul>
+</li>
+<li>由于前导代理、后尾代理、BMP中的有效字符的码位，三者互不重叠，搜索时一个字符编码的一部分不可能与另一个字符编码的不同部分相重叠。所以可以通过仅检查一个码元（构成码位的基本单位，2个字节）就可以判定给定字符的下一个字符的起始码元。</li>
+<li>java中的codepoint相关<ul>
+<li>对于一个字符串对象，其内容是通过一个char数组存储的。char类型由2个字节存储，这2个字节实际上存储的就是UTF-16编码下的码元。我们使用charAt和length方法的时候，返回的实际上是一个码元和码元的数量，虽然一般情况下没有问题，但是如果这个字符属于辅助平面字符，以上2个方法便无法得到正确的结果。正确的处理方式如下：<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> character = aString.codePointAt(i);</span><br><span class="line"><span class="keyword">int</span> length = aString.codePointCount(<span class="number">0</span>, aString.length())；</span><br><span class="line">需要注意codePointAt的返回值，是<span class="keyword">int</span>而非<span class="keyword">char</span>,这个值就是Unicode码。</span><br><span class="line">codePointAt方法调用了codePointAtImpl：</span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">codePointAtImpl</span><span class="params">(<span class="keyword">char</span>[] a, <span class="keyword">int</span> index, <span class="keyword">int</span> limit)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">char</span> c1 = a[index];</span><br><span class="line">    <span class="keyword">if</span> (isHighSurrogate(c1) &amp;&amp; ++index &lt; limit) &#123;</span><br><span class="line">        <span class="keyword">char</span> c2 = a[index];</span><br><span class="line">        <span class="keyword">if</span> (isLowSurrogate(c2)) &#123;</span><br><span class="line">            <span class="keyword">return</span> toCodePoint(c1, c2);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> c1;</span><br><span class="line">&#125;</span><br><span class="line">isHighSurrogate方法判断下标字符的<span class="number">2</span>个字节是否为UTF-<span class="number">16</span>中的前导代理（<span class="number">0xD800</span>~<span class="number">0xDBFF</span>）：</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">isHighSurrogate</span><span class="params">(<span class="keyword">char</span> ch)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// Help VM constant-fold; MAX_HIGH_SURROGATE + 1 == MIN_LOW_SURROGATE</span></span><br><span class="line">    <span class="keyword">return</span> ch &gt;= MIN_HIGH_SURROGATE &amp;&amp; ch &lt; (MAX_HIGH_SURROGATE + <span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">char</span> MIN_HIGH_SURROGATE = <span class="string">'\uD800'</span>;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">char</span> MAX_HIGH_SURROGATE = <span class="string">'\uDBFF'</span>;</span><br><span class="line">然后++index,isLowSurrogate方法判断下一个字符的<span class="number">2</span>个字节是否为后尾代理（<span class="number">0xDC00</span>~<span class="number">0xDFFF</span>）：</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">isLowSurrogate</span><span class="params">(<span class="keyword">char</span> ch)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> ch &gt;= MIN_LOW_SURROGATE &amp;&amp; ch &lt; (MAX_LOW_SURROGATE + <span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">char</span> MIN_LOW_SURROGATE  = <span class="string">'\uDC00'</span>;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">char</span> MAX_LOW_SURROGATE  = <span class="string">'\uDFFF'</span>;</span><br><span class="line">toCodePoint方法将这<span class="number">2</span>个码元组装成一个Unicode码：</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">toCodePoint</span><span class="params">(<span class="keyword">char</span> high, <span class="keyword">char</span> low)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// Optimized form of:</span></span><br><span class="line">    <span class="comment">// return ((high - MIN_HIGH_SURROGATE) &lt;&lt; 10)</span></span><br><span class="line">    <span class="comment">//         + (low - MIN_LOW_SURROGATE)</span></span><br><span class="line">    <span class="comment">//         + MIN_SUPPLEMENTARY_CODE_POINT;</span></span><br><span class="line">    <span class="keyword">return</span> ((high &lt;&lt; <span class="number">10</span>) + low) + (MIN_SUPPLEMENTARY_CODE_POINT</span><br><span class="line">                                    - (MIN_HIGH_SURROGATE &lt;&lt; <span class="number">10</span>)</span><br><span class="line">                                    - MIN_LOW_SURROGATE);</span><br><span class="line">&#125;</span><br><span class="line">这个过程就是以上将一个辅助平面的Unicode码位转换成<span class="number">2</span>个码元的逆过程。</span><br><span class="line">所以，枚举字符串的正确方法：</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; aString.length();) &#123;</span><br><span class="line">	<span class="keyword">int</span> character = aString.codePointAt(i);</span><br><span class="line">	<span class="comment">//如果是辅助平面字符，则i+2</span></span><br><span class="line">	<span class="keyword">if</span> (Character.isSupplementaryCodePoint(character)) i += <span class="number">2</span>;</span><br><span class="line">	<span class="keyword">else</span> ++i;</span><br><span class="line">&#125;</span><br><span class="line">将codePoint转换为<span class="keyword">char</span>[]可调用Character.toChars方法，然后可进一步转换为字符串：	</span><br><span class="line"><span class="keyword">new</span> String(Character.toChars(codePoint));</span><br><span class="line">toChars方法所做的就是以上将Unicode码位转换为<span class="number">2</span>个码元的过程,这<span class="number">2</span>个码元最后就成了字符串对象包含的<span class="keyword">char</span>数组中的<span class="number">2</span>个元素。</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="References"><a href="#References" class="headerlink" title="References"></a>References</h4><ul>
+<li><a href="http://www.ruanyifeng.com/blog/2007/10/ascii_unicode_and_utf-8.html" target="_blank" rel="noopener">字符编码笔记：ASCII，Unicode 和 UTF-8</a></li>
+<li><a href="https://vinoit.me/2016/10/07/codePoint-in-java-and-utf16/" target="_blank" rel="noopener">聊聊java中codepoint和UTF-16相关的一些事</a></li>
+</ul>
+<a id="more"></a>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/ASCII/" rel="tag"># ASCII</a>
+          
+            <a href="/tags/Unicode/" rel="tag"># Unicode</a>
+          
+            <a href="/tags/UTF-8/" rel="tag"># UTF-8</a>
+          
+            <a href="/tags/UTF-16/" rel="tag"># UTF-16</a>
+          
+            <a href="/tags/UTF-32/" rel="tag"># UTF-32</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/10/some-interesting-words-md/" rel="next" title="励志且真实的一些话">
+                <i class="fa fa-chevron-left"></i> 励志且真实的一些话
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/08/11/be-careful-for-your-kids-md/" rel="prev" title="带娃要专心啊">
+                带娃要专心啊 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/blog_head.jpg"
+                alt="thinhorse" />
+            
+              <p class="site-author-name" itemprop="name">thinhorse</p>
+              <p class="site-description motion-element" itemprop="description">不期而遇 | 不言而喻 | 不药而愈</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/thinhorse0410" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:thinhorse0410@hotmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#什么是字符集和字符编码"><span class="nav-number">1.</span> <span class="nav-text">什么是字符集和字符编码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ASCII字符集及编码"><span class="nav-number">2.</span> <span class="nav-text">ASCII字符集及编码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Unicode字符集"><span class="nav-number">3.</span> <span class="nav-text">Unicode字符集</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Unicode字符集编码方式"><span class="nav-number">4.</span> <span class="nav-text">Unicode字符集编码方式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#UTF-8"><span class="nav-number">5.</span> <span class="nav-text">UTF-8</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#传输-存储的顺序是否和编码顺序一致-大小端"><span class="nav-number">6.</span> <span class="nav-text">传输,存储的顺序是否和编码顺序一致(大小端)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#实例"><span class="nav-number">7.</span> <span class="nav-text">实例</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#UTF-16"><span class="nav-number">8.</span> <span class="nav-text">UTF-16</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#References"><span class="nav-number">9.</span> <span class="nav-text">References</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">thinhorse</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
